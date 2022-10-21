@@ -39,24 +39,7 @@ function Calendarr (){
     show(content)
 
   };
-  const [datas, setData] = useState();
-  
-  
-  useEffect(() => {
-    const fetchData =  () =>{
-      try {
-        const data =    Donneservice.getOneData(datee).then(response=>{setData((response.data.Donnes))});
-        //setData(JSON.parse.response);
-        // console.log(data);
-        
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
 
-    fetchData();
-  }, []);
-  console.log(datas)
 
  
   return(

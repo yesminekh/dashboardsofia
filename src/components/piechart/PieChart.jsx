@@ -1,97 +1,69 @@
-import React, { PureComponent } from 'react';
-import { PieChart, Pie, Sector,Cell } from 'recharts';
-import { useEffect, useState } from "react";
+import React ,{ useState, useEffect} from "react";
+import  Chart  from "react-apexcharts";
 import Donneservice from '../../service/Donnes.service'
 
+function Piechart()
+{
+  const [Data, setData]= useState([]);
+  const [name, setname]= useState([]);
 
-const data = [
-  { name: 'Pression', value: 101.3 },
-  { name: 'Temperature', value: 36 },
-  { name: ' Humidite', value: 50 },
-];
-const COLORS = ['#00008B', '#82ca9d', '#FF5733'];
 
-const renderActiveShape = (props) => {
-  const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
+  useEffect( ()=>{
+      const name=[];
+      const data=[];
+      const getdata= async()=>{
+      const reqData= Donneservice.getlastData().then(response=>{setData((response.data.Donnes))});
 
-  return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
+      for(let i=0; i< reqData.length; i++)
+      {
+       //name.push(reqData[i]);
+       data.push(parseInt(reqData[i].Donnees));
+      }
+      setData(sMarks);
+      setname(name);
+       //console.log(resData); 
+      }
 
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#FF5733">{ value}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#FF5733">
-        {`(average value ${(percent * 100).toFixed(2)}%)`}
-      </text>
-    </g>
-  );
-};
+   getdata();
 
-export default class PieCharts extends PureComponent {
+  },[]);
+  // const [datas, setData] = useState();
+  
+  
+  // useEffect(() => {
+  //   const fetchData =  () =>{
+  //     try {
 
-  state = {
-    activeIndex: 0,
-  };
+  //       //setData(JSON.parse.response);
+  //        console.log(data);
+        
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //   }
 
-  onPieEnter = (_, index) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
+  //   fetchData();
+  // }, []);
+    return(
+        <React.Fragment>
+            <div >
+                <Chart 
+                type="pie"
+                width={400}
+                height={400}
 
-  render() {
-    
-    return (
-   
-        <PieChart width={500} height={400}>
-          <Pie
-            activeIndex={this.state.activeIndex}
-            activeShape={renderActiveShape}
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={90}
-            fill="#FF5733"
-            dataKey="value"
-            onMouseEnter={this.onPieEnter}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-        </PieChart>
+                series={ Data }                
+
+                options={{
+                         
+                       noData:{text:"Empty Data"},                        
+                      // colors:["#f90000","#f0f"],
+
+                 }}
+                >
+                </Chart>
+            </div>
+        </React.Fragment>
     );
-  }
 }
+export default Piechart;

@@ -6,8 +6,7 @@ import {
   Button,
   Radio,
   Checkbox,
-Alert} from 'antd';
-const { TextArea } = Input;
+} from 'antd';
 
 const FormDisabledDemo = () => {
   const [componentDisabled, setComponentDisabled] = useState(false);

@@ -14,7 +14,7 @@ export default function DetailsTable () {
       try {
         const data =    Donneservice.getAllData().then(response=>{setData((response.data.Donnes))});
         //setData(JSON.parse.response);
-        // console.log(data);
+        console.log(data);
         
       } catch (error) {
         console.error(error.message);

@@ -1,19 +1,27 @@
-
-import { Badge, Col, Row, Space, Table } from 'antd';
-import React from 'react';
+import React, { PureComponent } from 'react';
+import {
+  BarChart,
+  Bar,
+  Brush,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 import { useEffect, useState } from "react";
 import Donneservice from '../../service/Donnes.service'
-import './Singlechart.css'
+import {data} from'../../dummyData.jsx';
 
-
-function App (Date){
+export default function Lineairechart  (){
   const [datas, setData] = useState();
   
   
   useEffect(() => {
     const fetchData =  () =>{
       try {
-        const data =    Donneservice.getOneData(Date).then(response=>{setData((response.data.Donnes))});
+        const data =    Donneservice.getlastData().then(response=>{setData((response.data.Donnes))});
         //setData(JSON.parse.response);
         // console.log(data);
         
@@ -25,60 +33,30 @@ function App (Date){
     fetchData();
   }, []);
   console.log(datas)
-  const columns = [
-      {
-        title: 'Date',
-        dataIndex: 'ts',
-   
-      },
-      {
-          title: 'Status',
-          key: 'status',
-          render: (record) => (
-            <span>
-              <Badge status={record.status} />
-              {record.status}
-           </span>
-          ),
-        },
-    
-      
-  ];
-    
 
-  return (
-    
-      <Table
-        columns={columns}
-        
-        expandable={{ expandedRowRender: (response) => (
-        <div style={{
-        margin:'20px',
-        alignItems:'center'}}>
-        <Row gutter={16}>
-       <Col  style={{color:'#00008B'}}  span={8}>Pression </Col>
-       <Col span={8}>{response.Pression}</Col>
-      </Row>
-      <Row gutter={16}>
-    <Col style={{color:'#82ca9d'}} span={8} >Temperature</Col>
-    <Col span={8}>{response.Temperature}</Col>
-    </Row>
-
-    <Row gutter={16}>
-    <Col  style={{color:'#FF5733'}} span={8}>Humidite</Col>
-    <Col span={8}>{response.humidite}</Col>
-   </Row></div> 
-            ),
+    return (
+        <BarChart
+          width={1000}
+          height={300}
+          data={datas}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
           }}
-        dataSource={datas}
-        rowKey='_id'
-        size="middle"
-        pagination={true}
-        scroll={{y:300}}
-      />
-      
-          );
-};
-
- 
-export default App;
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="ts" />
+          <YAxis />
+          <Tooltip />
+          <Legend  wrapperStyle={{ lineHeight: '40px' }} />
+          <ReferenceLine y={0} stroke="#000" />
+          <Brush dataKey="name" height={30} stroke="#8884d8" fontSize={12} />
+          <Bar dataKey="Pression" fill="#8884d8" />
+          <Bar dataKey="Temperature" fill="#82ca9d" />
+          <Bar dataKey="humidite" fill="#FF5733" />
+        </BarChart>
+    );
+  
+}

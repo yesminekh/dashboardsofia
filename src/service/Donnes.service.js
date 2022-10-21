@@ -9,9 +9,12 @@ class DataService{
     getAllData() {
         return axios.get(API_URL)
       }
+      getlastData() {
+        return axios.get(API_URL+"last")
+      }
     
     getOneData(ts){
-      return axios.get(API_URL+ts);
+      return axios.get(API_URL+":"+ts);
     }
 
     
